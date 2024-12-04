@@ -44,6 +44,17 @@ public class WeatherData {
 //    @SerializedName("cod")
 //    private int cod;
 
+    @SerializedName("rain")
+    private Rain rain;
+
+
+    public Rain getRain() {
+        return rain;
+    }
+
+    public void setRain(Rain rain) {
+        this.rain = rain;
+    }
 
     public Coord getCoord() {
         return coord;

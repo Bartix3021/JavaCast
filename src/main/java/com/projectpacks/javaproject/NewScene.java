@@ -21,6 +21,11 @@ public class NewScene {
     public Label feelsLike;
     public Label weatherName;
     public Label wind;
+    public Label clouds;
+    public Label rain;
+    public Label humidity;
+    public Label pressure;
+    public Label visibility;
 
     private WeatherService wS;
 
@@ -36,7 +41,16 @@ public class NewScene {
         temp.setText(element.getMain().getTemp() + "°C");
         feelsLike.setText("Feels like: " + element.getMain().getFeelsLike() + "°C");
         weatherName.setText(ic.getMain() + ": " + ic.getDescription());
-        wind.setText(element.getWind().getSpeed() + "km/h");
+        wind.setText(element.getWind().getSpeed() + " km/h");
+        clouds.setText(element.getClouds().getAll() + "% of the sky");
+        if (element.getRain() == null) {
+            rain.setText("no rain");
+        } else {
+            rain.setText(element.getRain().getAmount() + " mm/h");
+        }
+        pressure.setText(element.getMain().getPressure() + "hPa");
+        humidity.setText(element.getMain().getHumidity() + "%");
+        visibility.setText(element.getVisibility() / 1000 + "km");
         Image i  = new Image("https://openweathermap.org/img/wn/"+ ic.getIcon() +".png", true);
         icon.setImage(i);
     }
@@ -50,7 +64,16 @@ public class NewScene {
         temp.setText(element.getMain().getTemp() + "°C");
         feelsLike.setText("Feels like: " + element.getMain().getFeelsLike() + "°C");
         weatherName.setText(ic.getMain() + ": " + ic.getDescription());
-        wind.setText(element.getWind().getSpeed() + "km/h");
+        wind.setText(element.getWind().getSpeed() + " km/h");
+        clouds.setText(element.getClouds().getAll() + "% of the sky");
+        if (element.getRain() == null) {
+            rain.setText("no rain");
+        } else {
+            rain.setText(element.getRain().getAmount() + " mm/h");
+        }
+        pressure.setText(element.getMain().getPressure() + "hPa");
+        humidity.setText(element.getMain().getHumidity() + "%");
+        visibility.setText(element.getVisibility() / 1000 + "km");
         Image i  = new Image("https://openweathermap.org/img/wn/"+ ic.getIcon() +".png", true);
         icon.setImage(i);
     }

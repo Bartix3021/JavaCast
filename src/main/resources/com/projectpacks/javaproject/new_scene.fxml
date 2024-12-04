@@ -36,26 +36,21 @@
         <Label text="Wind:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <Label fx:id="wind" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label text="Porywy:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Label text="7 km/h" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="Clouds:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="clouds" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label text="Chmury:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Label text="50-60% nieba" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="Rain:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="rain" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label text="Opady:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Label text="0 mm / 12h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label text="Pressure:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="pressure" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Label text="Ciśnienie:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Label text="1027 hPa" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label text="Humidity:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label fx:id="humidity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-        <Label text="Wilgotność:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <Label text="85%" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <Label text="Visibility:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label fx:id="visibility" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-        <Label text="Termika:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <Label text="zimno i sucho" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
-        <Label text="Biomet:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <Label text="korzystny" style="-fx-text-fill: green;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
     </GridPane>
 </VBox>
 </StackPane>
