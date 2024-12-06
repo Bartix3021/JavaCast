@@ -75,4 +75,8 @@ public class TemplateController {
         Stage stage = (Stage) inp.getScene().getWindow();
         stage.setScene(new Scene(root));
     }
+
+    public void resetInput() {
+        inp.setText("");
+    }
 }

@@ -10,6 +10,6 @@ public class SevenDayStrategy implements WeatherStrategy{
     }
     @Override
     public WeatherData[] getWeather(String place) {
-        return null;
+        return openWeatherAPI.getWeeklyForecast(place);
     }
 }

@@ -10,7 +10,12 @@
             fx:controller="com.projectpacks.javaproject.NewScene" alignment="CENTER"
             prefHeight="400.0" prefWidth="600.0" >
 <VBox spacing="10" alignment="CENTER">
-    <Label fx:id="info" text="Jutro" style="-fx-font-size: 20px;" />
+    <HBox alignment="CENTER" spacing="10">
+        <Label HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS"/>  <!-- Push the button to the right -->
+        <Button style="-fx-end-margin: 10px" text="X" onAction="#goBack"/>
+    </HBox>
+    <Label fx:id="info" text="Jutro" style="-fx-font-size: 20px;" alignment="CENTER"/>
 
 
     <HBox spacing="20" alignment="CENTER" style="-fx-background-color: #868784;">
@@ -52,6 +57,10 @@
         <Label fx:id="visibility" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
     </GridPane>
+    <HBox spacing="20" alignment="CENTER" >
+        <Button fx:id="hourly" text="Hourly forecast" onAction="#renderForecast"/>
+        <Button fx:id="daily" text="Daily forecast" onAction="#renderForecast"/>
+    </HBox>
 </VBox>
 </StackPane>
 
