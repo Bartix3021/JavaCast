@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="primaryStage" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.projectpacks.javaproject.ForecastDisplay"
@@ -14,4 +15,5 @@
     <GridPane fx:id="gridPane">
         <!-- Start empty layout -->
     </GridPane>
+    <Button text="Generate Graph" onAction="#createGraph"/>
 </AnchorPane>

@@ -53,8 +53,8 @@ public class TemplateController {
 
         // Pass data to Scene2
         String textValue = inp.getText();
+        scene2Controller.setScene(scene2Controller);
         scene2Controller.setLabelText(textValue);
-
         // Switch scenes
         Stage stage = (Stage) inp.getScene().getWindow();
         stage.setScene(new Scene(root));
@@ -66,11 +66,10 @@ public class TemplateController {
 
         // Get controller of Scene2
         NewScene scene2Controller = loader.getController();
-
         // Pass data to Scene2
         String textValue = inp.getText();
+        scene2Controller.setScene(scene2Controller);
         scene2Controller.SetLabelToCity();
-
         // Switch scenes
         Stage stage = (Stage) inp.getScene().getWindow();
         stage.setScene(new Scene(root));

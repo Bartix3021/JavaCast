@@ -11,13 +11,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class VisualisationSetup {
-    public static VBox createWeatherVBox(WeatherData forecast) {
+    public static VBox createWeatherVBox(WeatherData forecast, String dataformat) {
         // Main VBox
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
 
         // Info Label
-        Label infoLabel = new Label(UnixToDate.convertUnixTimestampToDate(forecast.getDt(), "dd.MM.yyyy HH:mm"));
+        Label infoLabel = new Label(UnixToDate.convertUnixTimestampToDate(forecast.getDt(), dataformat));
         infoLabel.setStyle("-fx-font-size: 20px;");
 
         // HBox for ImageView and Temperature details

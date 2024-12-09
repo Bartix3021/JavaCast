@@ -3,11 +3,12 @@ package com.projectpacks.javaproject;
 import com.projectpacks.backend.forecastStrategies.CurrentStrategy;
 import com.projectpacks.backend.forecastStrategies.SevenDayStrategy;
 import com.projectpacks.backend.forecastStrategies.TwoDayStrategy;
-import com.projectpacks.backend.forecastStrategies.WeatherStrategy;
 import com.projectpacks.backend.inputStrategy.CityNameStrategy;
 import com.projectpacks.backend.inputStrategy.IpStrategy;
 import com.projectpacks.backend.objectStructure.Weather;
 import com.projectpacks.backend.objectStructure.WeatherData;
+import com.projectpacks.backend.observers.WeatherController;
+import com.projectpacks.backend.observers.WeatherDisplay;
 import com.projectpacks.backend.services.WeatherService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,8 +21,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import javax.swing.text.LabelView;
 import java.io.IOException;
-import java.util.EventObject;
 
 public class NewScene {
     @FXML
@@ -38,12 +39,35 @@ public class NewScene {
     public Label visibility;
     public Button hourly;
     public Button daily;
+    public NewScene n;
 
     private WeatherService wS;
     private String city;
+    private WeatherController weatherController;
+    private WeatherDisplay weatherDisplay;
 
     public NewScene() {
+        info = new Label();
+        temp = new Label();
+        icon = new ImageView();
+        feelsLike = new Label();
+        weatherName = new Label();
+        wind = new Label();
+        clouds = new Label();
+        rain = new Label();
+        humidity = new Label();
+        pressure = new Label();
+        visibility = new Label();
+
+
         this.wS = new WeatherService();
+        wS.setWeatherStrategy(new CurrentStrategy());
+        weatherController = new WeatherController(wS);
+        System.out.println(System.identityHashCode(info));
+        weatherDisplay = new WeatherDisplay(n, info, icon, temp, feelsLike, weatherName, wind, clouds, rain, humidity, pressure, visibility);
+        weatherController.addObserver(weatherDisplay);
+
+        // Rozpoczęcie aktualizacji co 15 minut
     }
 
     public void setLabelText(String textValue) {
@@ -52,6 +76,11 @@ public class NewScene {
         WeatherData[] d = wS.getDataByInput(textValue);
         WeatherData element = d[0];
         setSceneElements(element);
+        //weatherController.startUpdatingWeather(textValue);
+    }
+
+    public void setScene(NewScene n) {
+        this.n = n;
     }
 
     public void SetLabelToCity() {
@@ -60,9 +89,12 @@ public class NewScene {
         WeatherData element = d[0];
         city = element.getName();
         setSceneElements(element);
+        //weatherController.startUpdatingWeather(element.getName());
+        System.out.println(info.getText());
     }
 
     public void setSceneElements(WeatherData element) {
+        if (element == null) return; // Ochrona przed NPE
         Weather ic = element.getWeather().get(0);
         info.setText("Current weather in: " + element.getName());
         temp.setText(element.getMain().getTemp() + "°C");
@@ -82,12 +114,17 @@ public class NewScene {
         icon.setImage(i);
     }
 
-
     public void renderForecast(ActionEvent actionEvent) throws IOException {
+        Integer step = 0;
+        String format = "";
         if (actionEvent.getSource() == hourly) {
             wS.setWeatherStrategy(new TwoDayStrategy());
+            step = 1;
+            format = "dd.MM.yyyy HH:mm";
         } else {
             wS.setWeatherStrategy(new SevenDayStrategy());
+            step = 5;
+            format = "dd.MM.yyyy HH:mm";
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("forecast_display.fxml"));
@@ -95,10 +132,11 @@ public class NewScene {
 
         // Get controller of Scene2
         ForecastDisplay scene2Controller = loader.getController();
-        scene2Controller.presentData(wS, city);
+        scene2Controller.presentData(wS, city, step, format);
 
         // Switch scenes
         Stage stage = new Stage();
+        scene2Controller.setStage(stage);
         stage.setScene(new Scene(root));
         stage.show();
     }
@@ -118,6 +156,5 @@ public class NewScene {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
