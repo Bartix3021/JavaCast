@@ -23,6 +23,7 @@ public class OpenWeatherAPI {
 
     public WeatherData[] getCurrentWeather(String place) {
         pStrategy = new ParseWeatherStrategy();
+        place = place.replaceAll(" ", "+");
         String urlString = baseURL + "weather?q=" + place + "&appid=" + apiKey + "&units=metric";
         String result = fetchFromApi(urlString);
         System.out.println(result);
@@ -31,6 +32,7 @@ public class OpenWeatherAPI {
 
     public WeatherData[] getTwoDayForecast(String place) {
         pStrategy = new ParseForecastStrategy();
+        place = place.replaceAll(" ", "+");
         String urlString = baseURL + "forecast?q=" + place + "&exclude=current,minutely,daily,alerts&appid=" + apiKey + "&units=metric";
         String result = fetchFromApi(urlString);
         System.out.println(result);
@@ -39,6 +41,7 @@ public class OpenWeatherAPI {
 
     public WeatherData[] getWeeklyForecast(String place) {
         pStrategy = new ParseForecastStrategy();
+        place = place.replaceAll(" ", "+");
         String urlString = baseURL + "forecast?q=" + place + "&exclude=current,minutely,hourly,alerts&appid=" + apiKey + "&units=metric";
         String result = fetchFromApi(urlString);
         System.out.println(result);

@@ -1,5 +1,6 @@
 package com.projectpacks.javaproject;
 
+import com.projectpacks.backend.filesHandling.FileHandler;
 import com.projectpacks.backend.forecastStrategies.CurrentStrategy;
 import com.projectpacks.backend.forecastStrategies.WeatherStrategy;
 import com.projectpacks.backend.objectStructure.WeatherData;
@@ -9,25 +10,27 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.image.Image;
 public class TemplateController {
     @FXML
     private AnchorPane rootPane;
     @FXML
     private TextField inp;
+
+    @FXML
+    private GridPane gridPane;
+
+    private String[] cities;
 
     @FXML
     public void initialize() {
@@ -42,6 +45,7 @@ public class TemplateController {
         );
 
         rootPane.setBackground(new Background(bgImage));
+        cities = FileHandler.ReadFile();
     }
 
     public void send() throws IOException {
@@ -77,5 +81,70 @@ public class TemplateController {
 
     public void resetInput() {
         inp.setText("");
+    }
+
+    public void generateGrid() {
+
+        // Initialize the GridPane
+        gridPane.setHgap(10); // Horizontal gap between columns
+        gridPane.setVgap(10); // Vertical gap between rows
+        gridPane.maxHeight(150);
+        gridPane.minHeight(100);
+        // Add header row
+
+        String[] headings = {"City Name", "Search","Delete"};
+        for (int i = 0; i < headings.length; i++) {
+            Label l = new Label(headings[i]);
+            l.setStyle("-fx-text-fill: white; fx-font-weight: bold;");
+            gridPane.add(l, i, 0);
+        }
+
+        // Populate the grid with city rows
+        populateGrid(cities);
+    }
+
+    private void populateGrid(String[] cities) {
+        for (int i = 0; i < cities.length; i++) {
+            addCityRow(cities[i], i + 1);
+        }
+    }
+
+    private void addCityRow(String cityName, int rowIndex) {
+        // Label for the city name
+        Label cityLabel = new Label(cityName);
+        cityLabel.setStyle("-fx-text-fill: white; fx-font-weight: bold;");
+
+        // "Search" button
+        Button searchButton = new Button("Search");
+        searchButton.setOnAction(e -> {
+            inp.setText(cityName);
+            try {
+                send();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        // "Delete" button
+        Button deleteButton = new Button("Delete");
+        deleteButton.setOnAction(e -> {
+            // Remove the row from the grid
+            gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == rowIndex);
+
+            // Re-index the rows below the deleted row
+            for (int i = rowIndex + 1; i <= gridPane.getRowCount(); i++) {
+                for (var node : gridPane.getChildren()) {
+                    Integer currentRow = GridPane.getRowIndex(node);
+                    if (currentRow != null && currentRow == i) {
+                        GridPane.setRowIndex(node, i - 1);
+                    }
+                }
+            }
+        });
+
+        // Add components to the grid
+        gridPane.add(cityLabel, 0, rowIndex);
+        gridPane.add(searchButton, 1, rowIndex);
+        gridPane.add(deleteButton, 2, rowIndex);
     }
 }

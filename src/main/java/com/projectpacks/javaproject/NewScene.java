@@ -1,5 +1,6 @@
 package com.projectpacks.javaproject;
 
+import com.projectpacks.backend.filesHandling.FileHandler;
 import com.projectpacks.backend.forecastStrategies.CurrentStrategy;
 import com.projectpacks.backend.forecastStrategies.SevenDayStrategy;
 import com.projectpacks.backend.forecastStrategies.TwoDayStrategy;
@@ -7,14 +8,17 @@ import com.projectpacks.backend.inputStrategy.CityNameStrategy;
 import com.projectpacks.backend.inputStrategy.IpStrategy;
 import com.projectpacks.backend.objectStructure.Weather;
 import com.projectpacks.backend.objectStructure.WeatherData;
+import com.projectpacks.backend.observers.Observer;
 import com.projectpacks.backend.observers.WeatherController;
 import com.projectpacks.backend.observers.WeatherDisplay;
 import com.projectpacks.backend.services.WeatherService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -23,8 +27,11 @@ import javafx.stage.Stage;
 
 import javax.swing.text.LabelView;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class NewScene {
+public class NewScene implements Observer {
     @FXML
     public Label info;
     public ImageView icon;
@@ -64,8 +71,8 @@ public class NewScene {
         wS.setWeatherStrategy(new CurrentStrategy());
         weatherController = new WeatherController(wS);
         System.out.println(System.identityHashCode(info));
-        weatherDisplay = new WeatherDisplay(n, info, icon, temp, feelsLike, weatherName, wind, clouds, rain, humidity, pressure, visibility);
-        weatherController.addObserver(weatherDisplay);
+//        weatherDisplay = new WeatherDisplay( info, icon, temp, feelsLike, weatherName, wind, clouds, rain, humidity, pressure, visibility);
+        weatherController.addObserver(this);
 
         // Rozpoczęcie aktualizacji co 15 minut
     }
@@ -75,8 +82,9 @@ public class NewScene {
         city = textValue;
         WeatherData[] d = wS.getDataByInput(textValue);
         WeatherData element = d[0];
-        setSceneElements(element);
-        //weatherController.startUpdatingWeather(textValue);
+        //setSceneElements(element);
+        info.setText("Current weather in: " + textValue);
+        weatherController.startUpdatingWeather(textValue);
     }
 
     public void setScene(NewScene n) {
@@ -88,8 +96,9 @@ public class NewScene {
         WeatherData[] d = wS.getDataByInput("");
         WeatherData element = d[0];
         city = element.getName();
-        setSceneElements(element);
-        //weatherController.startUpdatingWeather(element.getName());
+        //setSceneElements(element);
+        info.setText("Current weather in: " + element.getName());
+        weatherController.startUpdatingWeather(element.getName());
         System.out.println(info.getText());
     }
 
@@ -115,7 +124,7 @@ public class NewScene {
     }
 
     public void renderForecast(ActionEvent actionEvent) throws IOException {
-        Integer step = 0;
+        int step = 0;
         String format = "";
         if (actionEvent.getSource() == hourly) {
             wS.setWeatherStrategy(new TwoDayStrategy());
@@ -143,6 +152,7 @@ public class NewScene {
 
     public void goBack(ActionEvent actionEvent) {
         try {
+            weatherController.removeObserver(this);
             // Load temp.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("temp.fxml"));
             Parent root = loader.load();
@@ -156,5 +166,51 @@ public class NewScene {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(WeatherData[] forecast) {
+        WeatherData element = forecast[0];
+        if (element == null) return; // Ochrona przed NPE
+        Weather ic = element.getWeather().get(0);
+        Platform.runLater(() -> {
+            temp.setText(element.getMain().getTemp() + "°C");
+            feelsLike.setText("Feels like: " + element.getMain().getFeelsLike() + "°C");
+            weatherName.setText(ic.getMain() + ": " + ic.getDescription());
+            wind.setText(element.getWind().getSpeed() + " km/h");
+            clouds.setText(element.getClouds().getAll() + "% of the sky");
+            if (element.getRain() == null) {
+                rain.setText("no rain");
+            } else {
+                rain.setText(element.getRain().getAmount() + " mm/h");
+            }
+            pressure.setText(element.getMain().getPressure() + "hPa");
+            humidity.setText(element.getMain().getHumidity() + "%");
+            visibility.setText(element.getVisibility() / 1000 + "km");
+            Image i  = new Image("https://openweathermap.org/img/wn/"+ ic.getIcon() +".png", true);
+            icon.setImage(i);
+        });
+
+    }
+
+    public void bookmark(ActionEvent actionEvent) {
+        String[] cities = FileHandler.ReadFile();
+
+        List<String> output = new ArrayList<>();
+        Collections.addAll(output, cities);
+
+        String message = "";
+        if (output.contains(city)) {
+            output.remove(city);
+            message = city + " has been removed from pinned locations";
+        } else {
+            output.add(city);
+            message = city + " has been added to the pinned locations";
+        }
+        FileHandler.UpdateFile(output.toString());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Bookmarks");
+        alert.setHeaderText(message);
+        alert.showAndWait();
     }
 }

@@ -34,13 +34,19 @@
                         -fx-background-color: white;
                     </style>
                 </TextField>
-
                 <!-- Buttons -->
-                <HBox alignment="CENTER" spacing="10">
+                <HBox alignment="CENTER" spacing="10" style="-fx-padding: 5px">
+                    <Button text="Send" style="-fx-background-color: white;" onAction="#send"/>
                     <Button text="🌐" onAction="#ipSend" style="-fx-background-color: white;" />
-                    <Button text="📍" style="-fx-background-color: white;"/>
+                    <Button text="📍" onAction="#generateGrid" style="-fx-background-color: white;"/>
                 </HBox>
-                <Button text="Send" style="-fx-background-color: white;" onAction="#send"/>
+                <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS" style="-fx-padding: 15px">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
+                        <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
+                        <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
+                    </columnConstraints>
+                </GridPane>
             </children>
         </VBox>
     </children>

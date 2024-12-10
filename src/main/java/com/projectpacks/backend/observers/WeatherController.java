@@ -25,7 +25,7 @@ public class WeatherController {
         observers.remove(observer);
     }
 
-    public void notifyObservers() throws IOException {
+    private void notifyObservers() throws IOException {
         WeatherData[] weatherData = apiService.getWeatherForecast(place);
         for (Observer observer : observers) {
             observer.update(weatherData);
@@ -44,6 +44,6 @@ public class WeatherController {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 15 * 1000); // Co 15 minut
+        }, 0, 5 * 1000); // Co 15 minut
     }
 }

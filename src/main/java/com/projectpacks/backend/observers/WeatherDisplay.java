@@ -20,11 +20,9 @@ public class WeatherDisplay implements Observer {
     private Label humidity;
     private Label pressure;
     private Label visibility;
-    private NewScene n;
 
-    public WeatherDisplay(NewScene n, Label info, ImageView icon, Label temp, Label feelsLike, Label weatherName, Label wind, Label clouds, Label rain, Label humidity, Label pressure, Label visibility) {
+    public WeatherDisplay(Label info, ImageView icon, Label temp, Label feelsLike, Label weatherName, Label wind, Label clouds, Label rain, Label humidity, Label pressure, Label visibility) {
         this.info = info;
-        this.n = n;
         System.out.println(System.identityHashCode(info));
         this.icon = icon;
         this.temp = temp;
@@ -43,7 +41,7 @@ public class WeatherDisplay implements Observer {
     private void setSceneElements(WeatherData element) {
         System.out.println(element);
         Weather ic = element.getWeather().get(0);
-        n.info.setText("Current weather in: " + element.getName());
+        //n.info.setText("Current weather in: " + element.getName());
         System.out.println(info.getText());
         System.out.println(System.identityHashCode(info));
         temp.setText(element.getMain().getTemp() + "°C");
