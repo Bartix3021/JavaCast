@@ -40,6 +40,7 @@
                     <Button text="📍" onAction="#generateGrid" style="-fx-background-color: white;"/>
                 </HBox>
 
+                <Label fx:id="message"/>
                 <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS" style="-fx-padding: 15px">
                     <columnConstraints>
                         <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>

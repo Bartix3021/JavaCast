@@ -13,7 +13,7 @@
             fx:controller="com.projectpacks.javaproject.controllers.ForecastTableController"
             prefHeight="400.0" prefWidth="600.0">
     <GridPane fx:id="gridPane">
-        <!-- Start empty layout -->
+
     </GridPane>
     <Button text="Generate Graph" onAction="#createGraph"/>
 </AnchorPane>

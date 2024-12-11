@@ -1,4 +1,4 @@
-package com.projectpacks.javaproject;
+package com.projectpacks.javaproject.controllers;
 
 import com.sothawo.mapjfx.*;
 import javafx.scene.Scene;
@@ -23,7 +23,6 @@ public class MapController {
         Stage mapStage = new Stage();
         BorderPane mapPane = new BorderPane();
 
-        // Initialize the MapView
         MapView mapView = new MapView();
         mapView.initialize(Configuration.builder()
                 .showZoomControls(true)

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class WeatherData {
+
     @SerializedName("coord")
     private Coord coord;
 
@@ -29,20 +30,10 @@ public class WeatherData {
     @SerializedName("dt")
     private long dt;
 
-//    @SerializedName("sys")
-//    private Sys sys;
 
-//    @SerializedName("timezone")
-//    private int timezone;
-//
-//    @SerializedName("id")
-//    private int id;
-//
     @SerializedName("name")
     private String name;
 
-//    @SerializedName("cod")
-//    private int cod;
 
     @SerializedName("rain")
     private Rain rain;
@@ -120,30 +111,6 @@ public class WeatherData {
         this.dt = dt;
     }
 
-//    public Sys getSys() {
-//        return sys;
-//    }
-//
-//    public void setSys(Sys sys) {
-//        this.sys = sys;
-//    }
-
-//    public int getTimezone() {
-//        return timezone;
-//    }
-
-//    public void setTimezone(int timezone) {
-//        this.timezone = timezone;
-//    }
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
     public String getName() {
         return name;
     }
@@ -152,13 +119,6 @@ public class WeatherData {
         this.name = name;
     }
 
-///    public int getCod() {
-//        return cod;
-//    }
-//
-//    public void setCod(int cod) {
-//        this.cod = cod;
-//    }
 
     @Override
     public String toString() {

@@ -58,6 +58,7 @@
         <Label fx:id="visibility" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
     </GridPane>
+    <Label alignment="BASELINE_RIGHT" style="-fx-padding: 10px" fx:id="updated"/>
     <HBox spacing="20" alignment="CENTER" >
         <Button fx:id="hourly" text="Hourly forecast" onAction="#renderForecast"/>
         <Button fx:id="daily" text="Daily forecast" onAction="#renderForecast"/>

@@ -14,22 +14,24 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javafx.scene.image.Image;
 public class MainViewController {
+
     @FXML
     private AnchorPane rootPane;
     @FXML
     private TextField inp;
-
     @FXML
     private GridPane gridPane;
-
     private String[] cities;
+    @FXML Label message;
 
     @FXML
     public void initialize() {
-        // Load the GIF and set it as the background
         Image backgroundImage = new Image("atmo.gif");
         BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
@@ -46,15 +48,9 @@ public class MainViewController {
     public void send() throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("city-view.fxml"));
         Parent root = loader.load();
-
-        // Get controller of Scene2
         CityViewController scene2Controller = loader.getController();
-
-        // Pass data to Scene2
         String textValue = inp.getText();
-        scene2Controller.setScene(scene2Controller);
         scene2Controller.setLabelText(textValue);
-        // Switch scenes
         Stage stage = (Stage) inp.getScene().getWindow();
         stage.setScene(new Scene(root));
     }
@@ -63,13 +59,10 @@ public class MainViewController {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("city-view.fxml"));
         Parent root = loader.load();
 
-        // Get controller of Scene2
+
         CityViewController scene2Controller = loader.getController();
-        // Pass data to Scene2
         String textValue = inp.getText();
-        scene2Controller.setScene(scene2Controller);
         scene2Controller.SetLabelToCity();
-        // Switch scenes
         Stage stage = (Stage) inp.getScene().getWindow();
         stage.setScene(new Scene(root));
     }
@@ -80,22 +73,24 @@ public class MainViewController {
 
     public void generateGrid() {
 
-        // Initialize the GridPane
-        gridPane.setHgap(10); // Horizontal gap between columns
-        gridPane.setVgap(10); // Vertical gap between rows
-        gridPane.maxHeight(150);
-        gridPane.minHeight(100);
-        // Add header row
+        if (cities.length > 0) {
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+            gridPane.maxHeight(150);
+            gridPane.minHeight(100);
 
-        String[] headings = {"City Name", "Search","Delete"};
-        for (int i = 0; i < headings.length; i++) {
-            Label l = new Label(headings[i]);
-            l.setStyle("-fx-text-fill: white; fx-font-weight: bold;");
-            gridPane.add(l, i, 0);
+            String[] headings = {"City Name", "Search","Delete"};
+            for (int i = 0; i < headings.length; i++) {
+                Label l = new Label(headings[i]);
+                l.setStyle("-fx-text-fill: white; fx-font-weight: bold;");
+                gridPane.add(l, i, 0);
+            }
+
+
+            populateGrid(cities);
+        } else {
+            message.setText("No cities bookmarked");
         }
-
-        // Populate the grid with city rows
-        populateGrid(cities);
     }
 
     private void populateGrid(String[] cities) {
@@ -105,11 +100,11 @@ public class MainViewController {
     }
 
     private void addCityRow(String cityName, int rowIndex) {
-        // Label for the city name
+
         Label cityLabel = new Label(cityName);
         cityLabel.setStyle("-fx-text-fill: white; fx-font-weight: bold;");
 
-        // "Search" button
+
         Button searchButton = new Button("Search");
         searchButton.setOnAction(e -> {
             inp.setText(cityName);
@@ -120,13 +115,12 @@ public class MainViewController {
             }
         });
 
-        // "Delete" button
+
         Button deleteButton = new Button("Delete");
         deleteButton.setOnAction(e -> {
-            // Remove the row from the grid
-            gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == rowIndex);
 
-            // Re-index the rows below the deleted row
+            gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == rowIndex);
+            System.out.println(rowIndex + cities[rowIndex - 1]);
             for (int i = rowIndex + 1; i <= gridPane.getRowCount(); i++) {
                 for (var node : gridPane.getChildren()) {
                     Integer currentRow = GridPane.getRowIndex(node);
@@ -135,9 +129,12 @@ public class MainViewController {
                     }
                 }
             }
+            List<String> arr_cities = new ArrayList<>();
+            arr_cities.addAll(Arrays.asList(cities));
+            arr_cities.remove(rowIndex - 1);
+            FileService.UpdateFile(Arrays.toString(arr_cities.toArray()));
         });
 
-        // Add components to the grid
         gridPane.add(cityLabel, 0, rowIndex);
         gridPane.add(searchButton, 1, rowIndex);
         gridPane.add(deleteButton, 2, rowIndex);
