@@ -3,10 +3,14 @@ module com.projectpacks.javaproject {
     requires javafx.fxml;
     requires com.google.gson;
     requires javafx.web;
-    requires java.desktop;
+    requires org.jxmapviewer.jxmapviewer2;
+    requires javafx.swing;
+    requires com.sothawo.mapjfx;
 
-    opens com.projectpacks.backend.objectStructure to com.google.gson;
-    opens com.projectpacks.backend.inputStrategy to com.google.gson;
+    opens com.projectpacks.backend.models to com.google.gson;
+    opens com.projectpacks.backend.input.method to com.google.gson;
     opens com.projectpacks.javaproject to javafx.fxml;
     exports com.projectpacks.javaproject;
+    exports com.projectpacks.javaproject.controllers;
+    opens com.projectpacks.javaproject.controllers to javafx.fxml;
 }

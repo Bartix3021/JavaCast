@@ -1,8 +1,8 @@
 package com.projectpacks.javaproject;
 
-import com.projectpacks.backend.UnixToDate;
-import com.projectpacks.backend.objectStructure.Weather;
-import com.projectpacks.backend.objectStructure.WeatherData;
+import com.projectpacks.backend.util.UnixToDate;
+import com.projectpacks.backend.models.Weather;
+import com.projectpacks.backend.models.WeatherData;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

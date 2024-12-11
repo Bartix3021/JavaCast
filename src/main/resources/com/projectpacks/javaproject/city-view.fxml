@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.image.Image?>
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.projectpacks.javaproject.controllers.CityViewController" alignment="CENTER"
+           prefHeight="400.0" prefWidth="600.0" >
+<VBox spacing="10" alignment="CENTER">
+    <HBox alignment="CENTER" spacing="10">
+        <Label HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS"/>  <!-- Push the button to the right -->
+        <Button style="-fx-end-margin: 10px" text="📍" onAction="#bookmark"/>
+        <Button style="-fx-end-margin: 10px" text="X" onAction="#goBack"/>
+    </HBox>
+    <Label fx:id="info" text="Jutro" style="-fx-font-size: 20px;" alignment="CENTER"/>
+
+
+    <HBox spacing="20" alignment="CENTER" style="-fx-background-color: #868784;">
+        <ImageView fitHeight="100" fitWidth="100" fx:id="icon">
+        </ImageView>
+        <VBox spacing="5">
+            <Label fx:id="temp" style="-fx-font-size: 40px;" />
+            <Label fx:id="feelsLike" style="-fx-font-size: 14px;" />
+        </VBox>
+    </HBox>
+
+    <Label fx:id="weatherName" style="-fx-font-size: 16px;" />
+
+    <GridPane hgap="10" vgap="5" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" />
+            <ColumnConstraints halignment="LEFT" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints valignment="CENTER" />
+        </rowConstraints>
+
+        <Label text="Wind:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="wind" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Label text="Clouds:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="clouds" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label text="Rain:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="rain" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label text="Pressure:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="pressure" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label text="Humidity:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label fx:id="humidity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <Label text="Visibility:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label fx:id="visibility" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+    </GridPane>
+    <HBox spacing="20" alignment="CENTER" >
+        <Button fx:id="hourly" text="Hourly forecast" onAction="#renderForecast"/>
+        <Button fx:id="daily" text="Daily forecast" onAction="#renderForecast"/>
+    </HBox>
+</VBox>
+</StackPane>
+
+

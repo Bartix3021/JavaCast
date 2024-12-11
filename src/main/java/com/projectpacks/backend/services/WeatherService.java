@@ -1,14 +1,14 @@
 package com.projectpacks.backend.services;
 
-import com.projectpacks.backend.forecastStrategies.WeatherStrategy;
-import com.projectpacks.backend.inputStrategy.InputStrategy;
-import com.projectpacks.backend.objectStructure.WeatherData;
+import com.projectpacks.backend.forecast.method.ForecastMethod;
+import com.projectpacks.backend.input.method.InputStrategy;
+import com.projectpacks.backend.models.WeatherData;
 
 public class WeatherService {
-    private WeatherStrategy weatherStrategy;
+    private ForecastMethod weatherStrategy;
     private InputStrategy inputStrategy;
 
-    public void setWeatherStrategy(WeatherStrategy weatherStrategy) {
+    public void setWeatherStrategy(ForecastMethod weatherStrategy) {
         this.weatherStrategy = weatherStrategy;
     }
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="primaryStage" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.projectpacks.javaproject.controllers.ForecastTableController"
+            prefHeight="400.0" prefWidth="600.0">
+    <GridPane fx:id="gridPane">
+        <!-- Start empty layout -->
+    </GridPane>
+    <Button text="Generate Graph" onAction="#createGraph"/>
+</AnchorPane>
