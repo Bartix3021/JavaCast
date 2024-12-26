@@ -4,7 +4,6 @@ module com.projectpacks.javaproject {
     requires com.google.gson;
     requires javafx.web;
     requires org.jxmapviewer.jxmapviewer2;
-    requires javafx.swing;
     requires com.sothawo.mapjfx;
 
     opens com.projectpacks.backend.models to com.google.gson;
