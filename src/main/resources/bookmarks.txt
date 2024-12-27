@@ -1,1 +1,1 @@
-[London, Oslo, Cape Town, Warszawa]
+[Oslo, Cape Town, Warszawa, Tokyo, Seul, Santiago, Brasilia, Rabat, Nairobi, nuuk]

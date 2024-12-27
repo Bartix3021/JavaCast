@@ -1,16 +1,28 @@
 package com.projectpacks.javaproject;
 
+import com.projectpacks.backend.forecast.method.CurrentForecastMethod;
+import com.projectpacks.backend.models.WeatherData;
+import com.projectpacks.backend.services.FileService;
+import com.projectpacks.backend.services.WeatherService;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.FileHandler;
 
 public class MapCoordinatesApp extends Application {
 
@@ -23,13 +35,23 @@ public class MapCoordinatesApp extends Application {
     private static final double MAX_LATITUDE = 90;
     private static final double MIN_LONGITUDE = -180;
     private static final double MAX_LONGITUDE = 180;
+    private List<WeatherData> weatherData = new ArrayList<>();
 
-    public static void main(String[] args) {
-        launch(args);
+
+
+
+    public void ReadCoordinates() {
+        String[] tab = FileService.ReadFile();
+        WeatherService weatherService = new WeatherService();
+        weatherService.setWeatherStrategy(new CurrentForecastMethod());
+        for (String city: tab) {
+            weatherData.add(weatherService.getWeatherForecast(city)[0]);
+        }
     }
 
     @Override
     public void start(Stage stage) {
+        ReadCoordinates();
         // Load the map image
         Image mapImage = new Image("https://www.mapsinternational.com/pub/media/catalog/product/x/s/a/satellite-map-of-the-world_wm00875.jpg");
         ImageView mapView = new ImageView(mapImage);
@@ -42,22 +64,15 @@ public class MapCoordinatesApp extends Application {
         // Create a Pane to hold the map and points
         Pane mapPane = new Pane(mapView);
 
-        // Example coordinates to plot on the map
-        double[][] coordinates = {
-                {51.5074, -0.1278}, // London
-                {40.7128, -74.0060}, // New York
-                {35.6895, 139.6917}, // Tokyo
-                {-33.8688, 151.2093}, // Sydney
-                {48.807880, 2.308952},
-        };
+
 
         // Plot each coordinate as a point on the map
-        for (double[] coordinate : coordinates) {
-            double latitude = coordinate[0];
-            double longitude = coordinate[1];
+        for (WeatherData w: weatherData) {
+            double latitude = w.getCoord().getLat();
+            double longitude = w.getCoord().getLon();
 
             Circle point = createPoint(latitude, longitude);
-            point.setOnMouseClicked(event -> showCityTemperaturePopup("Murzyn"));
+            point.setOnMouseClicked(event -> showCityTemperaturePopup(w));
             mapPane.getChildren().add(point);
         }
 
@@ -87,13 +102,21 @@ public class MapCoordinatesApp extends Application {
         return point;
     }
 
-    private void showCityTemperaturePopup(String cityName) {
+    private void showCityTemperaturePopup(WeatherData wD) {
         // Create an alert to show the city name and temperature
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("City Information");
         alert.setHeaderText(null);
-        alert.setContentText(cityName + "\nTemperature: 25°C");
+        alert.setGraphic(null);
 
+        VBox content = VisualisationSetup.createWeatherVBox(wD, "dd.MM.yyyy");
+        Label heading = new Label(wD.getName());
+        heading.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        content.getChildren().addFirst(heading);
+        content.setStyle("-fx-background-color: #FBE2D5");
+        DialogPane dialog = alert.getDialogPane();
+        dialog.setPrefSize(200,200);
+        dialog.setContent(content);
         // Show the alert
         alert.showAndWait();
     }

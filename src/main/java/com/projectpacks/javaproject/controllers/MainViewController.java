@@ -2,6 +2,7 @@ package com.projectpacks.javaproject.controllers;
 
 import com.projectpacks.backend.services.FileService;
 import com.projectpacks.javaproject.App;
+import com.projectpacks.javaproject.MapCoordinatesApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -141,11 +142,7 @@ public class MainViewController {
     }
 
     public void openMapWindow(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("map-view.fxml"));
-        Parent root = loader.load();
-
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        MapCoordinatesApp controller = new MapCoordinatesApp();
+        controller.start(new Stage());
     }
 }
