@@ -2,6 +2,7 @@ package com.projectpacks.javaproject.controllers;
 
 import com.projectpacks.backend.services.FileService;
 import com.projectpacks.javaproject.App;
+import com.projectpacks.javaproject.AppController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,7 +45,7 @@ public class MainViewController {
         );
 
         rootPane.setBackground(new Background(bgImage));
-        cities = FileService.ReadFile();
+        cities = AppController.getInstance().ReadFile();
     }
 
     public void send() throws IOException {
@@ -158,7 +159,7 @@ public class MainViewController {
             for (int i = 0; i < arr_cities.size(); i++) {
                 cities[i] = arr_cities.get(i);
             }
-            FileService.UpdateFile(String.join("\n", arr_cities));
+            AppController.getInstance().UpdateFile(String.join("\n", arr_cities));
         });
 
         gridPane.add(cityLabel, 0, rowIndex);

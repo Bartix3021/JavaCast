@@ -35,6 +35,7 @@ public class PeriodicalWeatherService {
     }
 
     public void startUpdatingWeather(String place) {
+        this.endFlag=false;
         this.place = place;
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -50,7 +51,8 @@ public class PeriodicalWeatherService {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 5 * 60 * 1000);
+        }, 0,  5 * 1000);
+//        timer.cancel();
     }
 
     public void setEndFlag() {

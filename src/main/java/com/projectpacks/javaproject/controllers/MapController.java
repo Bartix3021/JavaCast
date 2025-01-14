@@ -4,6 +4,7 @@ import com.projectpacks.backend.forecast.method.CurrentForecastMethod;
 import com.projectpacks.backend.models.WeatherData;
 import com.projectpacks.backend.services.FileService;
 import com.projectpacks.backend.services.WeatherService;
+import com.projectpacks.javaproject.AppController;
 import com.projectpacks.javaproject.VisualisationSetup;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -38,11 +39,10 @@ public class MapController extends Application {
 
 
     public void ReadCoordinates() {
-        String[] tab = FileService.ReadFile();
-        WeatherService weatherService = new WeatherService();
-        weatherService.setWeatherMethod(new CurrentForecastMethod());
+        String[] tab = AppController.getInstance().ReadFile();
+        AppController.getInstance().setWeatherMethod(new CurrentForecastMethod());
         for (String city: tab) {
-            weatherData.add(weatherService.getWeatherForecast(city)[0]);
+            weatherData.add(AppController.getInstance().getWeatherForecast(city)[0]);
         }
     }
 

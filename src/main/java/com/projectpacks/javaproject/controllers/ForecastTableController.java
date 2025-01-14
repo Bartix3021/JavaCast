@@ -4,6 +4,7 @@ import com.projectpacks.backend.util.UnixToDate;
 import com.projectpacks.backend.services.WeatherService;
 import com.projectpacks.backend.models.WeatherData;
 import com.projectpacks.javaproject.App;
+import com.projectpacks.javaproject.AppController;
 import com.projectpacks.javaproject.VisualisationSetup;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,8 +40,8 @@ public class ForecastTableController {
         this.stage = stage;
     }
 
-    public void presentData(WeatherService weatherService, String place, Integer limit, String dataFormat) {
-        WeatherData[] data = weatherService.getWeatherForecast(place);
+    public void presentData(String place, Integer limit, String dataFormat) {
+        WeatherData[] data = AppController.getInstance().getWeatherForecast(place);
         city = place;
         System.out.println("Forecast for " + place + " " + Arrays.toString(data));
         setGrid(data, limit, dataFormat);
@@ -55,7 +56,7 @@ public class ForecastTableController {
         for (int i = 0; i < forecast.length; i += step) {
             if (x < 8) {
                 WeatherData d = forecast[i];
-                datesLabels.add(UnixToDate.convertUnixTimestampToDate(d.getDt(), dateformat));
+                datesLabels.add(AppController.getInstance().convertUnixTimestampToDate(d.getDt(), dateformat));
                 tempValues.add(d.getMain().getTemp());
                 VBox vbox = VisualisationSetup.createWeatherVBox(d, dateformat);
                 if (x %2 == 0) {

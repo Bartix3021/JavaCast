@@ -12,6 +12,7 @@ import com.projectpacks.backend.observers.PeriodicalWeatherDataObserver;
 import com.projectpacks.backend.services.PeriodicalWeatherService;
 import com.projectpacks.backend.services.WeatherService;
 import com.projectpacks.javaproject.App;
+import com.projectpacks.javaproject.AppController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,24 +50,27 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
     public Button daily;
     public Label updated;
 
-    private final WeatherService weatherService;
+
     private String city;
-    private final PeriodicalWeatherService periodicalService;
+
 
     public CityViewController() {
 
 
-        this.weatherService = new WeatherService();
-        weatherService.setWeatherMethod(new CurrentForecastMethod());
-        periodicalService = new PeriodicalWeatherService(weatherService);
-        periodicalService.addObserver(this);
+    }
 
+    public void initialize() {
+
+
+//        this.weatherService = new WeatherService();
+        AppController.getInstance().setWeatherMethod(new CurrentForecastMethod());
+        AppController.getInstance().addPeriodicalObserver(this);
     }
 
     public boolean setLabelText(String textValue) {
-        weatherService.setInputMethod(new CityNameMethod());
+        AppController.getInstance().setInputMethod(new CityNameMethod());
         city = textValue;
-        WeatherData[] d = weatherService.getDataByInput(textValue);
+        WeatherData[] d = AppController.getInstance().getDataByInput(textValue);
         if (d[0] == null) {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Error");
@@ -76,19 +80,19 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
         }
         WeatherData element = d[0];
         info.setText("Current weather in: " + textValue);
-        periodicalService.startUpdatingWeather(textValue);
+        AppController.getInstance().startPeriodicalWeatherObservation(textValue);
         return true;
     }
 
 
 
     public void SetLabelToCity() {
-        weatherService.setInputMethod(new IPMethod());
-        WeatherData[] d = weatherService.getDataByInput("");
+        AppController.getInstance().setInputMethod(new IPMethod());
+        WeatherData[] d = AppController.getInstance().getDataByInput("");
         WeatherData element = d[0];
         city = element.getName();
         info.setText("Current weather in: " + element.getName());
-        periodicalService.startUpdatingWeather(element.getName());
+        AppController.getInstance().startPeriodicalWeatherObservation(element.getName());
     }
 
 
@@ -97,11 +101,11 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
         String format = "";
 
         if (actionEvent.getSource() == hourly) {
-            weatherService.setWeatherMethod(new TwoDayForecastMethod());
+            AppController.getInstance().setWeatherMethod(new TwoDayForecastMethod());
             step = 1;
             format = "dd.MM.yyyy HH:mm";
         } else {
-            weatherService.setWeatherMethod(new FiveDayForecastMethod());
+            AppController.getInstance().setWeatherMethod(new FiveDayForecastMethod());
             step = 5;
             format = "dd.MM.yyyy HH:mm";
         }
@@ -110,7 +114,7 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
         Parent root = loader.load();
 
         ForecastTableController scene2Controller = loader.getController();
-        scene2Controller.presentData(weatherService, city, step, format);
+        scene2Controller.presentData(city, step, format);
 
         Stage stage = new Stage();
         scene2Controller.setStage(stage);
@@ -120,8 +124,8 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
 
     public void goBack(ActionEvent actionEvent) {
         try {
-            periodicalService.setEndFlag();
-            periodicalService.removeObserver(this);
+            AppController.getInstance().stopPeriodicalWeatherObservation();
+            AppController.getInstance().removePeriodicalObserver(this);
             FXMLLoader loader = new FXMLLoader(App.class.getResource("main-view.fxml"));
             Parent root = loader.load();
             MainViewController controller = loader.getController();
@@ -135,6 +139,7 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
 
     @Override
     public void update(WeatherData[] forecast) {
+        System.out.println("vgvgvigvi");
         WeatherData element = forecast[0];
         if (element == null) return;
         Weather ic = element.getWeather().get(0);
@@ -162,7 +167,7 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
     }
 
     public void bookmark(ActionEvent actionEvent) {
-        String[] cities = FileService.ReadFile();
+        String[] cities = AppController.getInstance().ReadFile();
 
         List<String> output = new ArrayList<>();
         Collections.addAll(output, cities);
@@ -175,7 +180,7 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
             output.add(city);
             message = city + " has been added to the pinned locations";
         }
-        FileService.UpdateFile(String.join("\n", output));
+        AppController.getInstance().UpdateFile(String.join("\n", output));
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Bookmarks");
         alert.setHeaderText(message);

@@ -17,7 +17,7 @@ public class VisualisationSetup {
         root.setAlignment(Pos.CENTER);
 
         // Info Label
-        Label infoLabel = new Label(UnixToDate.convertUnixTimestampToDate(forecast.getDt(), dataformat));
+        Label infoLabel = new Label(AppController.getInstance().convertUnixTimestampToDate(forecast.getDt(), dataformat));
         infoLabel.setStyle("-fx-font-size: 20px;");
 
         // HBox for ImageView and Temperature details
