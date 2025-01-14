@@ -2,12 +2,12 @@ package com.projectpacks.javaproject.controllers;
 
 import com.projectpacks.backend.services.FileService;
 import com.projectpacks.javaproject.App;
-import com.projectpacks.javaproject.MapCoordinatesApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -30,6 +30,7 @@ public class MainViewController {
     private GridPane gridPane;
     private String[] cities;
     @FXML Label message;
+    @FXML VBox tableBox;
 
     @FXML
     public void initialize() {
@@ -47,13 +48,24 @@ public class MainViewController {
     }
 
     public void send() throws IOException {
+        if (inp.getText().trim().equals("")) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Error");
+            a.setHeaderText("Please Fill in the input field");
+            a.showAndWait();
+            return;
+        }
         FXMLLoader loader = new FXMLLoader(App.class.getResource("city-view.fxml"));
         Parent root = loader.load();
         CityViewController scene2Controller = loader.getController();
         String textValue = inp.getText();
-        scene2Controller.setLabelText(textValue);
-        Stage stage = (Stage) inp.getScene().getWindow();
-        stage.setScene(new Scene(root));
+        boolean result = scene2Controller.setLabelText(textValue);
+        if (result) {
+            Stage stage = (Stage) inp.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } else {
+            inp.setText("");
+        }
     }
 
     public void ipSend() throws IOException {
@@ -73,7 +85,16 @@ public class MainViewController {
     }
 
     public void generateGrid() {
-
+        if (tableBox.isVisible()) {
+            tableBox.setVisible(false);
+            gridPane = new GridPane();
+            gridPane.maxHeight(0);
+            gridPane.maxWidth(0);
+            gridPane.setHgap(0);
+            gridPane.setVgap(0);
+            return;
+        }
+        tableBox.setVisible(true);
         if (cities.length > 0) {
             gridPane.setHgap(10);
             gridPane.setVgap(10);
@@ -133,7 +154,11 @@ public class MainViewController {
             List<String> arr_cities = new ArrayList<>();
             arr_cities.addAll(Arrays.asList(cities));
             arr_cities.remove(rowIndex - 1);
-            FileService.UpdateFile(Arrays.toString(arr_cities.toArray()));
+            cities = new String[arr_cities.size()];
+            for (int i = 0; i < arr_cities.size(); i++) {
+                cities[i] = arr_cities.get(i);
+            }
+            FileService.UpdateFile(String.join("\n", arr_cities));
         });
 
         gridPane.add(cityLabel, 0, rowIndex);
@@ -142,7 +167,7 @@ public class MainViewController {
     }
 
     public void openMapWindow(ActionEvent actionEvent) throws IOException {
-        MapCoordinatesApp controller = new MapCoordinatesApp();
+        MapController controller = new MapController();
         controller.start(new Stage());
     }
 }

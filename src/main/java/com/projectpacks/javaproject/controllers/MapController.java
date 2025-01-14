@@ -1,66 +1,120 @@
 package com.projectpacks.javaproject.controllers;
 
-import com.sothawo.mapjfx.*;
+import com.projectpacks.backend.forecast.method.CurrentForecastMethod;
+import com.projectpacks.backend.models.WeatherData;
+import com.projectpacks.backend.services.FileService;
+import com.projectpacks.backend.services.WeatherService;
+import com.projectpacks.javaproject.VisualisationSetup;
+import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-public class MapController {
-    private final Coordinate warsaw = new Coordinate(52.2297, 21.0122);
-    private final Coordinate paris = new Coordinate(48.8566, 2.3522);
-    private static final Coordinate coordKarlsruheCastle = new Coordinate(49.013517, 8.404435);
-    private static final Coordinate coordKarlsruheHarbour = new Coordinate(49.015511, 8.323497);
-    private static final Coordinate coordKarlsruheStation = new Coordinate(48.993284, 8.402186);
-    private static final Coordinate coordKarlsruheSoccer = new Coordinate(49.020035, 8.412975);
-    private static final Coordinate coordKarlsruheUniversity = new Coordinate(49.011809, 8.413639);
-    private static final Extent extentAllLocations = Extent.forCoordinates(coordKarlsruheCastle,
-            coordKarlsruheHarbour, coordKarlsruheStation, coordKarlsruheSoccer);
+import java.util.ArrayList;
+import java.util.List;
 
-    public MapController() {
-        show();
-    }
-    public void show() {
-        Stage mapStage = new Stage();
-        BorderPane mapPane = new BorderPane();
+public class MapController extends Application {
 
-        MapView mapView = new MapView();
-        mapView.initialize(Configuration.builder()
-                .showZoomControls(true)
-                .build());
-        mapView.setZoom(5);
-        mapView.setCenter(warsaw);
+    // Replace with the dimensions of your image
+    private static final double IMAGE_WIDTH = 1320; // Example width
+    private static final double IMAGE_HEIGHT = 837; // Example height
 
-        // Add markers with labels
-        //addMarkerWithLabel(mapView, warsaw, "Warsaw", "5°C");
-        //addMarkerWithLabel(mapView, paris, "Paris", "10°C");
-        //mapView.addMarker();
-        mapPane.setCenter(mapView);
-        Scene mapScene = new Scene(mapPane, 800, 600);
+    // World map boundaries
+    private static final double MIN_LATITUDE = -120;
+    private static final double MAX_LATITUDE = 90;
+    private static final double MIN_LONGITUDE = -180;
+    private static final double MAX_LONGITUDE = 180;
+    private List<WeatherData> weatherData = new ArrayList<>();
 
-        mapStage.setTitle("City Map");
-        mapStage.setScene(mapScene);
 
-        mapStage.show();
 
-        // Cleanup when the stage is closed
-        mapStage.setOnCloseRequest(event -> mapView.close());
+
+    public void ReadCoordinates() {
+        String[] tab = FileService.ReadFile();
+        WeatherService weatherService = new WeatherService();
+        weatherService.setWeatherMethod(new CurrentForecastMethod());
+        for (String city: tab) {
+            weatherData.add(weatherService.getWeatherForecast(city)[0]);
+        }
     }
 
-    private void addMarkerWithLabel(MapView mapView, Coordinate coordinate, String cityName, String temperature) {
-        // Create a Marker
-        Marker marker = Marker.createProvided(Marker.Provided.BLUE)
-                .setPosition(coordinate)
-                .setVisible(true);
+    @Override
+    public void start(Stage stage) {
+        ReadCoordinates();
+        // Load the map image
+        Image mapImage = new Image("https://www.mapsinternational.com/pub/media/catalog/product/x/s/a/satellite-map-of-the-world_wm00875.jpg");
+        ImageView mapView = new ImageView(mapImage);
 
-        // Add the marker to the map
-        mapView.addMarker(marker);
+        // Resize the ImageView to fit the window
+        mapView.setFitWidth(IMAGE_WIDTH);
+        mapView.setFitHeight(IMAGE_HEIGHT);
+        mapView.setPreserveRatio(true);
 
-        // Create a MapLabel with specific position and visibility
-        MapLabel label = new MapLabel(cityName + " (" + temperature + ")", 10, 20)
-                .setPosition(coordinate)
-                .setVisible(true);
+        // Create a Pane to hold the map and points
+        Pane mapPane = new Pane(mapView);
 
-        // Add the label to the map
-        mapView.addLabel(label);
+
+
+        // Plot each coordinate as a point on the map
+        for (WeatherData w: weatherData) {
+            double latitude = w.getCoord().getLat();
+            double longitude = w.getCoord().getLon();
+
+            Circle point = createPoint(latitude, longitude);
+            point.setOnMouseClicked(event -> showCityTemperaturePopup(w));
+            mapPane.getChildren().add(point);
+        }
+
+        // Create a scene and display the map
+        Scene scene = new Scene(mapPane, IMAGE_WIDTH, IMAGE_HEIGHT);
+        stage.setScene(scene);
+        stage.setTitle("Map Coordinates Viewer");
+        stage.show();
+    }
+
+    /**
+     * Converts geographic coordinates to pixel coordinates and creates a Circle.
+     * @param latitude  Latitude of the point.
+     * @param longitude Longitude of the point.
+     * @return A Circle representing the point on the map.
+     */
+    private Circle createPoint(double latitude, double longitude) {
+        // Convert latitude and longitude to x, y pixel coordinates
+        double x = ((longitude - MIN_LONGITUDE) / (MAX_LONGITUDE - MIN_LONGITUDE)) * IMAGE_WIDTH;
+        double y = ((MAX_LATITUDE - latitude + 27.5) / (MAX_LATITUDE - MIN_LATITUDE)) * IMAGE_HEIGHT;
+
+        // Create a point as a Circle
+        Circle point = new Circle(x, y, 5); // Radius of 5 pixels
+        point.setFill(Color.RED);
+        point.setStroke(Color.BLACK);
+
+        return point;
+    }
+
+    private void showCityTemperaturePopup(WeatherData wD) {
+        // Create an alert to show the city name and temperature
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("City Information");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+
+        VBox content = VisualisationSetup.createWeatherVBox(wD, "dd.MM.yyyy");
+        Label heading = new Label(wD.getName());
+        heading.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        content.getChildren().addFirst(heading);
+        content.setStyle("-fx-background-color: #FBE2D5");
+        DialogPane dialog = alert.getDialogPane();
+        dialog.setPrefSize(200,200);
+        dialog.setContent(content);
+        // Show the alert
+        alert.showAndWait();
     }
 }

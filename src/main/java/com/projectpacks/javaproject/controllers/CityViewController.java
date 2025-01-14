@@ -11,7 +11,6 @@ import com.projectpacks.backend.models.WeatherData;
 import com.projectpacks.backend.observers.PeriodicalWeatherDataObserver;
 import com.projectpacks.backend.services.PeriodicalWeatherService;
 import com.projectpacks.backend.services.WeatherService;
-import com.projectpacks.backend.util.UnixToDate;
 import com.projectpacks.javaproject.App;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -31,7 +30,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class CityViewController implements PeriodicalWeatherDataObserver {
@@ -59,25 +57,33 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
 
 
         this.weatherService = new WeatherService();
-        weatherService.setWeatherStrategy(new CurrentForecastMethod());
+        weatherService.setWeatherMethod(new CurrentForecastMethod());
         periodicalService = new PeriodicalWeatherService(weatherService);
         periodicalService.addObserver(this);
 
     }
 
-    public void setLabelText(String textValue) {
-        weatherService.setInputStrategy(new CityNameMethod());
+    public boolean setLabelText(String textValue) {
+        weatherService.setInputMethod(new CityNameMethod());
         city = textValue;
         WeatherData[] d = weatherService.getDataByInput(textValue);
+        if (d[0] == null) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Error");
+            a.setHeaderText("Invalid input. Location not found");
+            a.showAndWait();
+            return false;
+        }
         WeatherData element = d[0];
         info.setText("Current weather in: " + textValue);
         periodicalService.startUpdatingWeather(textValue);
+        return true;
     }
 
 
 
     public void SetLabelToCity() {
-        weatherService.setInputStrategy(new IPMethod());
+        weatherService.setInputMethod(new IPMethod());
         WeatherData[] d = weatherService.getDataByInput("");
         WeatherData element = d[0];
         city = element.getName();
@@ -91,11 +97,11 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
         String format = "";
 
         if (actionEvent.getSource() == hourly) {
-            weatherService.setWeatherStrategy(new TwoDayForecastMethod());
+            weatherService.setWeatherMethod(new TwoDayForecastMethod());
             step = 1;
             format = "dd.MM.yyyy HH:mm";
         } else {
-            weatherService.setWeatherStrategy(new FiveDayForecastMethod());
+            weatherService.setWeatherMethod(new FiveDayForecastMethod());
             step = 5;
             format = "dd.MM.yyyy HH:mm";
         }
@@ -169,7 +175,7 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
             output.add(city);
             message = city + " has been added to the pinned locations";
         }
-        FileService.UpdateFile(output.toString());
+        FileService.UpdateFile(String.join("\n", output));
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Bookmarks");
         alert.setHeaderText(message);

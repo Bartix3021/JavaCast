@@ -5,22 +5,22 @@ import com.projectpacks.backend.input.method.InputMethod;
 import com.projectpacks.backend.models.WeatherData;
 
 public class WeatherService {
-    private ForecastMethod weatherStrategy;
-    private InputMethod inputStrategy;
+    private ForecastMethod weatherMethod;
+    private InputMethod inputMethod;
 
-    public void setWeatherStrategy(ForecastMethod weatherStrategy) {
-        this.weatherStrategy = weatherStrategy;
+    public void setWeatherMethod(ForecastMethod weatherMethod) {
+        this.weatherMethod = weatherMethod;
     }
 
-    public void setInputStrategy(InputMethod inputStrategy) {
-        this.inputStrategy = inputStrategy;
+    public void setInputMethod(InputMethod inputMethod) {
+        this.inputMethod = inputMethod;
     }
 
     public WeatherData[] getWeatherForecast(String place) {
-        return weatherStrategy.getWeather(place);
+        return weatherMethod.getWeather(place);
     }
 
     public WeatherData[] getDataByInput(String input) {
-        return inputStrategy.inputData(input);
+        return inputMethod.inputData(input);
     }
 }

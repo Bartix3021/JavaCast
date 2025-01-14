@@ -15,22 +15,9 @@ public class OpenWeatherAPI {
 
     private static final String apiKey = "c1eadebb1cf3ba7f6ea302b77a19ca3f";
     private static final String baseURL = "https://api.openweathermap.org/data/2.5/";
-    private ParsingMethod pStrategy;
-
-    public OpenWeatherAPI() {
-        pStrategy = new ParseWeatherMethod();
-    }
 
 
 
-    public WeatherData[] getWeeklyForecast(String place) {
-        pStrategy = new ParseForecastMethod();
-        place = place.replaceAll(" ", "+");
-        String urlString = baseURL + "forecast?q=" + place + "&exclude=current,minutely,hourly,alerts&appid=" + apiKey + "&units=metric";
-        String result = fetchFromApi(urlString);
-        System.out.println(result);
-        return pStrategy.parse(result);
-    }
 
     public static String fetchFromApi(String urlString) {
         StringBuilder result = new StringBuilder();
@@ -50,6 +37,7 @@ public class OpenWeatherAPI {
                 in.close();
             } else {
                 System.out.println(responseCode);
+                return null;
             }
         } catch (IOException e) {
             System.out.println(e);

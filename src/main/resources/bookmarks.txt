@@ -1,1 +1,16 @@
-[Oslo, Cape Town, Warszawa, Tokyo, Seul, Santiago, Brasilia, Rabat, Nairobi, nuuk]
+Warszawa
+Oslo
+Berlin
+Paris
+Nairobi
+Sydney
+Manila
+Jakarta
+Dakar
+Beijing
+New York
+Rio de Janeiro
+Santiago
+Buenos Aires
+Wrocław
+Zagwiździe

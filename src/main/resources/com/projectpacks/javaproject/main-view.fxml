@@ -40,17 +40,20 @@
                     <Button text="📍" onAction="#generateGrid" style="-fx-background-color: white;"/>
                 </HBox>
 
-                <Label fx:id="message"/>
-                <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS" style="-fx-padding: 15px">
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
-                        <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
-                        <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
-                    </columnConstraints>
-                </GridPane>
+                <VBox fx:id="tableBox" visible="false" alignment="CENTER">
+                    <Label fx:id="message"/>
+                    <ScrollPane style="-fx-background-color: rgba(187,187,187,0.5); -fx-background: transparent; -fx-border-color: transparent; -fx-padding: 10;">
+                        <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS" style="-fx-padding: 15px">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
+                                <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
+                                <ColumnConstraints minWidth="100" maxWidth="200" hgrow="SOMETIMES"/>
+                            </columnConstraints>
+                    </GridPane>
+                    </ScrollPane>
 
-                <Button text="OpenMap" onAction="#openMapWindow"/>
-
+                    <Button text="OpenMap" onAction="#openMapWindow" alignment="CENTER"/>
+                </VBox>
             </children>
         </VBox>
     </children>
