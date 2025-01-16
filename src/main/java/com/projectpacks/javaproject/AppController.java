@@ -1,6 +1,11 @@
 package com.projectpacks.javaproject;
 
+import com.projectpacks.backend.forecast.method.CurrentForecastMethod;
+import com.projectpacks.backend.forecast.method.FiveDayForecastMethod;
 import com.projectpacks.backend.forecast.method.ForecastMethod;
+import com.projectpacks.backend.forecast.method.TwoDayForecastMethod;
+import com.projectpacks.backend.input.method.CityNameMethod;
+import com.projectpacks.backend.input.method.IPMethod;
 import com.projectpacks.backend.input.method.InputMethod;
 import com.projectpacks.backend.models.WeatherData;
 import com.projectpacks.backend.observers.PeriodicalWeatherDataObserver;
@@ -44,12 +49,33 @@ public class AppController {
         return this.weatherService.getWeatherForecast(place);
     }
 
-    public void setWeatherMethod(ForecastMethod method) {
-        this.weatherService.setWeatherMethod(method);
+    public void setWeatherMethod(String method) {
+        switch (method) {
+            case "current":
+                this.weatherService.setWeatherMethod(new CurrentForecastMethod());
+                break;
+            case "hourly":
+                this.weatherService.setWeatherMethod(new TwoDayForecastMethod());
+                break;
+            case "forecast":
+                this.weatherService.setWeatherMethod(new FiveDayForecastMethod());
+                break;
+            default:
+                break;
+        }
     }
 
-    public void setInputMethod(InputMethod method) {
-        this.weatherService.setInputMethod(method);
+    public void setInputMethod(String method) {
+        switch (method) {
+            case "city":
+                this.weatherService.setInputMethod(new CityNameMethod());
+                break;
+            case "ip":
+                this.weatherService.setInputMethod(new IPMethod());
+                break;
+            default:
+                break;
+        }
     }
 
     public WeatherData[] getDataByInput(String arg) {

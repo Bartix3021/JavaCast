@@ -24,11 +24,11 @@ import java.util.List;
 
 public class MapController extends Application {
 
-    // Replace with the dimensions of your image
-    private static final double IMAGE_WIDTH = 1320; // Example width
-    private static final double IMAGE_HEIGHT = 837; // Example height
 
-    // World map boundaries
+    private static final double IMAGE_WIDTH = 1320;
+    private static final double IMAGE_HEIGHT = 837;
+
+
     private static final double MIN_LATITUDE = -120;
     private static final double MAX_LATITUDE = 90;
     private static final double MIN_LONGITUDE = -180;
@@ -40,7 +40,7 @@ public class MapController extends Application {
 
     public void ReadCoordinates() {
         String[] tab = AppController.getInstance().ReadFile();
-        AppController.getInstance().setWeatherMethod(new CurrentForecastMethod());
+        AppController.getInstance().setWeatherMethod("current");
         for (String city: tab) {
             weatherData.add(AppController.getInstance().getWeatherForecast(city)[0]);
         }
@@ -49,21 +49,21 @@ public class MapController extends Application {
     @Override
     public void start(Stage stage) {
         ReadCoordinates();
-        // Load the map image
+
         Image mapImage = new Image("https://www.mapsinternational.com/pub/media/catalog/product/x/s/a/satellite-map-of-the-world_wm00875.jpg");
         ImageView mapView = new ImageView(mapImage);
 
-        // Resize the ImageView to fit the window
+
         mapView.setFitWidth(IMAGE_WIDTH);
         mapView.setFitHeight(IMAGE_HEIGHT);
         mapView.setPreserveRatio(true);
 
-        // Create a Pane to hold the map and points
+
         Pane mapPane = new Pane(mapView);
 
 
 
-        // Plot each coordinate as a point on the map
+
         for (WeatherData w: weatherData) {
             double latitude = w.getCoord().getLat();
             double longitude = w.getCoord().getLon();
@@ -73,26 +73,21 @@ public class MapController extends Application {
             mapPane.getChildren().add(point);
         }
 
-        // Create a scene and display the map
+
         Scene scene = new Scene(mapPane, IMAGE_WIDTH, IMAGE_HEIGHT);
         stage.setScene(scene);
         stage.setTitle("Map Coordinates Viewer");
         stage.show();
     }
 
-    /**
-     * Converts geographic coordinates to pixel coordinates and creates a Circle.
-     * @param latitude  Latitude of the point.
-     * @param longitude Longitude of the point.
-     * @return A Circle representing the point on the map.
-     */
+
     private Circle createPoint(double latitude, double longitude) {
-        // Convert latitude and longitude to x, y pixel coordinates
+
         double x = ((longitude - MIN_LONGITUDE) / (MAX_LONGITUDE - MIN_LONGITUDE)) * IMAGE_WIDTH;
         double y = ((MAX_LATITUDE - latitude + 27.5) / (MAX_LATITUDE - MIN_LATITUDE)) * IMAGE_HEIGHT;
 
-        // Create a point as a Circle
-        Circle point = new Circle(x, y, 5); // Radius of 5 pixels
+
+        Circle point = new Circle(x, y, 5);
         point.setFill(Color.RED);
         point.setStroke(Color.BLACK);
 
@@ -100,7 +95,7 @@ public class MapController extends Application {
     }
 
     private void showCityTemperaturePopup(WeatherData wD) {
-        // Create an alert to show the city name and temperature
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("City Information");
         alert.setHeaderText(null);
@@ -114,7 +109,7 @@ public class MapController extends Application {
         DialogPane dialog = alert.getDialogPane();
         dialog.setPrefSize(200,200);
         dialog.setContent(content);
-        // Show the alert
+
         alert.showAndWait();
     }
 }

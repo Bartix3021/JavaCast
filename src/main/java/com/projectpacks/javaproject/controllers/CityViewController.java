@@ -62,13 +62,13 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
     public void initialize() {
 
 
-//        this.weatherService = new WeatherService();
-        AppController.getInstance().setWeatherMethod(new CurrentForecastMethod());
+
+        AppController.getInstance().setWeatherMethod("current");
         AppController.getInstance().addPeriodicalObserver(this);
     }
 
     public boolean setLabelText(String textValue) {
-        AppController.getInstance().setInputMethod(new CityNameMethod());
+        AppController.getInstance().setInputMethod("city");
         city = textValue;
         WeatherData[] d = AppController.getInstance().getDataByInput(textValue);
         if (d[0] == null) {
@@ -87,7 +87,7 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
 
 
     public void SetLabelToCity() {
-        AppController.getInstance().setInputMethod(new IPMethod());
+        AppController.getInstance().setInputMethod("ip");
         WeatherData[] d = AppController.getInstance().getDataByInput("");
         WeatherData element = d[0];
         city = element.getName();
@@ -101,11 +101,11 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
         String format = "";
 
         if (actionEvent.getSource() == hourly) {
-            AppController.getInstance().setWeatherMethod(new TwoDayForecastMethod());
+            AppController.getInstance().setWeatherMethod("hourly");
             step = 1;
             format = "dd.MM.yyyy HH:mm";
         } else {
-            AppController.getInstance().setWeatherMethod(new FiveDayForecastMethod());
+            AppController.getInstance().setWeatherMethod("forecast");
             step = 5;
             format = "dd.MM.yyyy HH:mm";
         }
@@ -139,7 +139,6 @@ public class CityViewController implements PeriodicalWeatherDataObserver {
 
     @Override
     public void update(WeatherData[] forecast) {
-        System.out.println("vgvgvigvi");
         WeatherData element = forecast[0];
         if (element == null) return;
         Weather ic = element.getWeather().get(0);

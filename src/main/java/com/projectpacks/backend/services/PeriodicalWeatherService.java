@@ -51,8 +51,8 @@ public class PeriodicalWeatherService {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0,  5 * 1000);
-//        timer.cancel();
+        }, 0,  5 * 60 * 1000);
+
     }
 
     public void setEndFlag() {

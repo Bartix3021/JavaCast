@@ -143,7 +143,6 @@ public class MainViewController {
         deleteButton.setOnAction(e -> {
 
             gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == rowIndex);
-            System.out.println(rowIndex + cities[rowIndex - 1]);
             for (int i = rowIndex + 1; i <= gridPane.getRowCount(); i++) {
                 for (var node : gridPane.getChildren()) {
                     Integer currentRow = GridPane.getRowIndex(node);

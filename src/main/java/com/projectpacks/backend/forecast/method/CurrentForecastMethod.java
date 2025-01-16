@@ -17,7 +17,6 @@ public class CurrentForecastMethod implements ForecastMethod {
         place = place.replaceAll(" ", "+");
         String urlString = OpenWeatherAPI.urlBuilder("weather", place);
         String result = OpenWeatherAPI.fetchFromApi(urlString);
-        System.out.println(result);
         return pStrategy.parse(result);
     }
 }

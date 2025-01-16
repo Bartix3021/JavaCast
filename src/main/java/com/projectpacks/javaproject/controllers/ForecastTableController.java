@@ -43,7 +43,6 @@ public class ForecastTableController {
     public void presentData(String place, Integer limit, String dataFormat) {
         WeatherData[] data = AppController.getInstance().getWeatherForecast(place);
         city = place;
-        System.out.println("Forecast for " + place + " " + Arrays.toString(data));
         setGrid(data, limit, dataFormat);
     }
 

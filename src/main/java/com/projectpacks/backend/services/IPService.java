@@ -22,7 +22,6 @@ public class IPService {
             String ip = in.readLine();
             in.close();
 
-            System.out.println("Your public IP address is: " + ip);
             return ip;
 
         } catch (Exception e) {

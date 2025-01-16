@@ -12,15 +12,14 @@ import javafx.scene.layout.*;
 
 public class VisualisationSetup {
     public static VBox createWeatherVBox(WeatherData forecast, String dataformat) {
-        // Main VBox
+
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
 
-        // Info Label
         Label infoLabel = new Label(AppController.getInstance().convertUnixTimestampToDate(forecast.getDt(), dataformat));
         infoLabel.setStyle("-fx-font-size: 20px;");
 
-        // HBox for ImageView and Temperature details
+
         VBox hBox = new VBox(20);
         hBox.setAlignment(Pos.CENTER);
 
@@ -42,11 +41,11 @@ public class VisualisationSetup {
         tempVBox.getChildren().addAll(tempLabel, feelsLikeLabel);
         hBox.getChildren().addAll(icon, tempVBox);
 
-        // Weather Name Label
+
         Label weatherNameLabel = new Label(forecast.getWeather().get(0).getMain() + " : " + forecast.getWeather().get(0).getDescription());
         weatherNameLabel.setStyle("-fx-font-size: 16px;");
 
-        // GridPane for additional information
+
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(5);
@@ -77,7 +76,7 @@ public class VisualisationSetup {
             gridPane.add(valueLabel, 1, i);
         }
 
-        // Assemble the VBox
+
         root.getChildren().addAll(infoLabel, hBox, weatherNameLabel, gridPane);
 
         return root;

@@ -1,6 +1,5 @@
 Warszawa
 Oslo
-Berlin
 Paris
 Nairobi
 Sydney
@@ -12,6 +11,3 @@ New York
 Rio de Janeiro
 Santiago
 Buenos Aires
-Wrocław
-Zagwiździe
-Opole
